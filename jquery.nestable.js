@@ -482,15 +482,17 @@
             var isRejected = false;
             for (i in this.options.reject) {
               var reject = this.options.reject[i];
-              if (reject.rule.apply(this.dragRootEl)) {
-                var nestableDragEl = el.clone(true);
-                this.dragRootEl.html(this.nestableCopy.children().clone(true));
-                if (reject.action) {
-                  reject.action.apply(this.dragRootEl, [nestableDragEl]);
+              if (reject.rule != 'undefined') {
+                if (reject.rule?.apply(this.dragRootEl)) {
+                  var nestableDragEl = el.clone(true);
+                  this.dragRootEl.html(this.nestableCopy.children().clone(true));
+                  if (reject.action) {
+                    reject.action.apply(this.dragRootEl, [nestableDragEl]);
+                  }
+                  
+                  isRejected = true;
+                  break;
                 }
-                
-                isRejected = true;
-                break;
               }
             }
             
