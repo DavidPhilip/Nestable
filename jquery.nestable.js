@@ -482,7 +482,7 @@
             var isRejected = false;
             for (i in this.options.reject) {
               var reject = this.options.reject[i];
-              if (reject.rule != 'undefined') {
+              if (reject.rule != undefined) {
                 if (reject.rule.apply(this.dragRootEl)) {
                   var nestableDragEl = el.clone(true);
                   this.dragRootEl.html(this.nestableCopy.children().clone(true));
