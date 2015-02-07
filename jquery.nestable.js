@@ -4,6 +4,7 @@
 ;
 (function($, window, document, undefined) {
     var hasTouch = 'ontouchstart' in window;
+    var nestableCopy;
 
     /**
      * Detect CSS pointer-events property
@@ -54,6 +55,7 @@
         fixedDepth: false, //fixed item's depth
         fixed: false,
         includeContent: false,
+        reject: [],
         callback: function(l, e) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
@@ -145,13 +147,17 @@
 
             var onStartEvent = function(e) {
                 var handle = $(e.target);
-                if(!handle.hasClass(list.options.handleClass)) {
-                    if(handle.closest('.' + list.options.noDragClass).length) {
+                
+                list.nestableCopy = handle.closest('.'+list.options.rootClass).clone(true);
+                
+                if (!handle.hasClass(list.options.handleClass)) {
+                    if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if(!handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
+                
+                if (!handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
@@ -472,22 +478,29 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
-            if(this.hasNewRoot) {
-                if(this.options.fixed === true) {
-                    this.restoreItemAtIndex(el);
+            var i;
+            var isRejected = false;
+            for (i in this.options.reject) {
+              var reject = this.options.reject[i];
+              if (reject.rule.apply(this.dragRootEl)) {
+                var nestableDragEl = el.clone(true);
+                this.dragRootEl.html(this.nestableCopy.children().clone(true));
+                if (reject.action) {
+                  reject.action.apply(this.dragRootEl, [nestableDragEl]);
                 }
-                else {
-                    this.el.trigger('lostItem');
-                }
-                this.dragRootEl.trigger('gainedItem');
+                
+                isRejected = true;
+                break;
+              }
             }
-            else {
-                this.dragRootEl.trigger('change');
+            
+            if (!isRejected) {
+              this.el.trigger('change');
+              if (this.hasNewRoot) {
+                  this.dragRootEl.trigger('change');
+              }
             }
-
             this.dragEl.remove();
-            this.options.callback.call(this, this.dragRootEl, el);
-
             this.reset();
         },
 
