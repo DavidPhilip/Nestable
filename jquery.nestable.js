@@ -499,6 +499,7 @@
               if (this.hasNewRoot) {
                   this.dragRootEl.trigger('change');
               }
+              this.options.callback.call(this, this.dragRootEl, el);
             }
             this.dragEl.remove();
             this.reset();
