@@ -476,8 +476,7 @@
             //this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
-            // this.placeEl.replaceWith(el);
-            this.placeEl.remove();
+            this.placeEl.replaceWith(el);
 
             var i;
             var isRejected = false;
