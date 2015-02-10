@@ -486,7 +486,7 @@
                 var nestableDragEl = el.clone(true);
                 this.dragRootEl.html(this.nestableCopy.children().clone(true));
                 if (reject.action) {
-                  reject.action.apply(this, this.dragRootEl, el, [nestableDragEl]);
+                  reject.action.apply(el, [nestableDragEl]);
                 }
                 
                 isRejected = true;
