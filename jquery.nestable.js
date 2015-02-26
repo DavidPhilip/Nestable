@@ -482,11 +482,11 @@
             var isRejected = false;
             for (i = 0; i < this.options.reject.length; i++) {
               var reject = this.options.reject[i];
-              if (reject.rule.apply(el, this)) {
+              if (reject.rule.apply(el, [this])) {
                 var nestableDragEl = el.clone(true);
                 this.dragRootEl.html(this.nestableCopy.children().clone(true));
                 if (reject.action) {
-                  reject.action.apply(el, this, [nestableDragEl]);
+                  reject.action.apply(el, [nestableDragEl, this]);
                 }
                 
                 isRejected = true;
