@@ -481,22 +481,19 @@
             var i;
             var isRejected = false;
             for (i = 0; i < this.options.reject.length; i++) {
-                var reject = this.options.reject[i];
-                isRejected = reject.rule.apply(el, [this]).then(function(response) {
+              var reject = this.options.reject[i];
+              reject.rule.apply(el, [this]).then(function(response) {
                   if (response) {
-                      var nestableDragEl = el.clone(true);
-                      this.dragRootEl.html(this.nestableCopy.children().clone(true));
-                      if (reject.action) {
-                          reject.action.apply(el, [nestableDragEl, this]);
-                      }
+                    var nestableDragEl = el.clone(true);
+                    this.dragRootEl.html(this.nestableCopy.children().clone(true));
+                    if (reject.action) {
+                      reject.action.apply(el, [nestableDragEl, this]);
+                    }
                     
-                      isRejected = true;
+                    isRejected = true;
+                    break;
                   }
-                }, el, this, reject);
-
-                if (isRejected) {
-                  break;
-                }
+              }, el, this, reject)
             }
             
             if (!isRejected) {
